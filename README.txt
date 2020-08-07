@@ -1,8 +1,11 @@
+//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
+
 To Run the Program from the Terminal:
     1. Change to the correct directory (be inside the classgroupings folder)
-        ls      lists the contents of your current directory (gives you idea of where you are)
+        ls              lists the contents of your current directory (gives you idea of where you are)
         cd <folder>     changes your location to the folder you specify (it must be a folder that is visible from
-                            your current directory. to start over you can type 'cd' and that will take you to the topmost directory - from there you can just type 'cd Desktop' to get there.
+                        your current directory. to start over you can type 'cd' and that will take you to the topmost
+                        directory - from there you can just type 'cd Desktop' to get there.
     2. type 'python main.py'
         the program will automatically run - if no errors occurred the txt file with the resulting groups will
             automatically open for you. (it will be saved inside the classgroupings folder under RESULTS.txt)
@@ -36,5 +39,12 @@ MIN SIZE:	NA
 
 In teams.txt you can specify the names used for the teams created. Don't have more than 12 lines in this file!
 (unless you ask me to make the program able to do more than 12 teams, then I will adjust this accordingly)
+
+//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
+
+The Gender column in the rollcallx.txt file is useless right now, you can adjust them if you want but it won't effect
+the program at all - just don't leave it blank please:)
+
+If you desire a gender based grouping algorithm to be added let me know.
 
 //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---

@@ -1,26 +1,10 @@
 import random
 import subprocess
 
+# GLOBAL VARIABLES
+
 TEAMS = []
 ERRORS = False
-
-def read_in_teams():
-    global TEAMS
-    file = "/Users/wasecahodson/Desktop/classgroupings/teams.txt"
-    with open(file, "r") as file:
-        for line in file:
-            line = line.rstrip()
-            TEAMS.append(line)
-    file.close()
-
-
-class Student:
-    def __init__(self, name, presence, sociability, gender):
-        self.name = name
-        self.presence = presence
-        self.sociability = sociability
-        self.gender = gender
-
 
 NUM_DESIRED_GROUPS = 0
 DESIRED_GROUP_SIZE = 0
@@ -53,7 +37,6 @@ FIVE_STUDENTS = []
 NON_TROUBLE_STUDENTS = []
 NON_SHY_STUDENTS = []
 
-
 GROUPS = []
 
 RANDOMIZED_CONSIDERED_STUDENTS = []
@@ -67,6 +50,37 @@ RANDOMIZED_SHY = []
 RANDOMIZED_TROUBLE = []
 
 
+# Class with name, sociability and gender details to be created for each student listed in rollcallx.txt file.
+# gender was added for the potential desire of wanting to make groups based on it.
+class Student:
+    def __init__(self, name, presence, sociability, gender):
+        self.name = name
+        self.presence = presence
+        self.sociability = sociability
+        self.gender = gender
+
+
+# Reads in the 12 names desired for the Groups from the teams.txt file
+def read_in_teams():
+    global ERRORS
+    global TEAMS
+    file = "/Users/wasecahodson/Desktop/classgroupings/teams.txt"
+    with open(file, "r") as file:
+        for line in file:
+            line = line.rstrip()
+            TEAMS.append(line)
+    file.close()
+    if len(TEAMS) < 12:
+        with open("/Users/wasecahodson/Desktop/classgroupings/ERRORS.txt", "w") as er:
+            er.write(
+                "There needs to be 12 Team Names specified in the teams.txt file.")
+        er.close()
+        ERRORS = True
+        return
+
+
+# Will read the filelocation.txt file to get the pathname of the rollcallx.txt to be used - sense this file will be
+# copied multiple times (per class per semester).
 def get_file_location():
     with open("/Users/wasecahodson/Desktop/classgroupings/filelocation.txt", "r") as fff:
         for line in fff:
@@ -75,6 +89,8 @@ def get_file_location():
     return filelocation
 
 
+# Reads in the rollcallx.txt file to be used (pathname of which is specified in the filelocation.txt file.
+# Updates all global variables based on information provided in the rollcallx.txt file
 def read_file(file):
     fileContents = []
     with open(file, "r") as f:
@@ -161,8 +177,17 @@ def read_file(file):
                 FIVE_STUDENTS.append(newstudent)
                 NON_SHY_STUDENTS.append(newstudent)
                 NON_TROUBLE_STUDENTS.append(newstudent)
+    if (DESIRED_GROUP_SIZE == 0 and NUM_DESIRED_GROUPS == 0) or (DESIRED_GROUP_SIZE != 0 and NUM_DESIRED_GROUPS!=0):
+            with open("/Users/wasecahodson/Desktop/classgroupings/ERRORS.txt", "w") as er:
+                er.write(
+                    "There needs to be a valid response in either the Number of Desired Groups or in the"
+                    "Desired Size of the Groups entries (only one of them should have a valid entry - the other"
+                    "needs to be 'NA'.)")
+            er.close()
+            ERRORS = True
 
 
+# randomized all listings of students that will be used in group assignment algorithms.
 def randomize():
     global RANDOMIZED_CONSIDERED_STUDENTS, RANDOMIZED_NON_SHY_STUDENTS, RANDOMIZED_NON_TROUBLE_STUDENTS
     global ALL_CONSIDERED_STUDENTS, NON_SHY_STUDENTS, NON_TROUBLE_STUDENTS
@@ -187,6 +212,8 @@ def randomize():
     random.shuffle(RANDOMIZED_TROUBLE)
 
 
+# Menu function to go through settings specified from the rollcallx.txt file  to determine which level of
+# grouping type algorithm should be used.
 def group_making_algorithm_chooser():
     global TROUBLE_STUDENTS
     if USE_SOC_SCALE:
@@ -213,6 +240,121 @@ def group_making_algorithm_chooser():
         no_preferences()
 
 
+# Algorithm to make groups that avoids placing students marked as Trouble students with other Trouble students as
+# much as possible.
+def no_t_with_t():
+    global NUM_DESIRED_GROUPS
+    global DESIRED_GROUP_SIZE
+    global RANDOMIZED_NON_SHY_STUDENTS
+    global RANDOMIZED_NON_TROUBLE_STUDENTS
+    global RANDOMIZED_CONSIDERED_STUDENTS
+    global TROUBLE_STUDENTS
+    global ERRORS
+    if NUM_DESIRED_GROUPS != 0 and DESIRED_GROUP_SIZE == 0:
+        # HAS DESIRED # OF GROUPS
+        counter = 0
+        while counter < NUM_DESIRED_GROUPS:
+            counter = counter + 1
+            group = []
+            GROUPS.append(group)
+        # Do Ceiling Division of Total Number of students divded by number of trouble students to determine max number of trouble students that will be needed per group
+        if len(TROUBLE_STUDENTS) > NUM_DESIRED_GROUPS:
+            max_trouble_per_group = -(-int(len(ALL_CONSIDERED_STUDENTS)) // int(len(TROUBLE_STUDENTS)))
+        else:
+            max_trouble_per_group = 1
+        counter = 0
+        while counter < len(ALL_CONSIDERED_STUDENTS):
+            grp = GROUPS.pop(0)
+            trouble_in_group = 0
+            for kid in grp:
+                if kid.sociability == 0:
+                    trouble_in_group = trouble_in_group + 1
+            if trouble_in_group < max_trouble_per_group:
+                student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
+                grp.append(student)
+                counter = counter + 1
+                GROUPS.append(grp)
+            else:
+                GROUPS.append(grp)
+        # put this check for debugging in case i did something that causes not all the students
+        # from the randomized array to be put in a group
+        if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
+            print("ERROR CODE 1")
+    elif DESIRED_GROUP_SIZE != 0 and NUM_DESIRED_GROUPS == 0:
+        # HAS DESIRED GROUP SIZE
+        preliminary_groups = []
+        unaddable = []
+        while len(RANDOMIZED_CONSIDERED_STUDENTS) > MIN_GROUP_SIZE:
+            group = []
+            num_trouble_students = 0
+            grp_count = 0
+            while grp_count < MIN_GROUP_SIZE:
+                student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
+                if student.sociability == 0:
+                    if num_trouble_students == 0:
+                        group.append(student)
+                        grp_count = grp_count + 1
+                    else:
+                        unaddable.append(student)
+                else:
+                    group.append(student)
+                    grp_count = grp_count + 1
+            preliminary_groups.append(group)
+        if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
+            for group in preliminary_groups:
+                if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
+                    student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
+                    if student.sociability == 0:
+                        already_trouble_in_group = False
+                        for kid in group:
+                            if kid.sociability == 0:
+                                already_trouble_in_group = True
+                        if already_trouble_in_group:
+                            unaddable.append(student)
+                        else:
+                            group.append(student)
+                    else:
+                        group.append(student)
+                else:
+                    break
+        if len(unaddable) > 0:
+            # array of arrays structured like [# of trouble students, # of students, pointer to position of array of students in the prelimary groups array]
+            trouble = []
+            counter = 0
+            for group in preliminary_groups:
+                trouble_count = 0
+                for kid in group:
+                    if kid.sociability == 0:
+                        trouble_count = trouble_count + 1
+                temp = []
+                temp.append(trouble_count)
+                temp.append(len(group))
+                temp.append(counter)
+                counter = counter + 1
+                trouble.append(temp)
+        while len(unaddable) > 0:
+            sorted(trouble)
+            group = trouble.pop(0)
+            if group[1] < MAX_GROUP_SIZE:
+                pointer = group[2]
+                students = preliminary_groups[pointer]
+                students.append(unaddable.pop(0))
+                preliminary_groups.pop(pointer)
+                GROUPS.append(students)
+            else:
+                GROUPS.append(group)
+        for group in preliminary_groups:
+            GROUPS.append(group)
+    else:
+        with open("/Users/wasecahodson/Desktop/classgroupings/ERRORS.txt", "w") as er:
+            er.write("ERROR: Please put NA in either the Number of Desired Groups or the Desired Group Size field - Cannot have "
+              "a value in both fields at the same time or no value in either field")
+        er.close()
+        ERRORS = True
+        return
+
+
+# Algorithm to make groups that is purely random selection.
 def no_preferences():
     global NUM_DESIRED_GROUPS
     global DESIRED_GROUP_SIZE
@@ -246,6 +388,8 @@ def no_preferences():
             GROUPS.append(grp)
 
 
+# Algorithm to make groups based on sociability rating - Algorithm tries to balance out the average of all the
+# sociability ratings in a group among all other groups.
 def just_scale():
     global NUM_DESIRED_GROUPS
     global DESIRED_GROUP_SIZE
@@ -299,6 +443,8 @@ def just_scale():
         GROUPS.append(grp)
 
 
+# Algorithm to make groups that avoids placing students marked as Trouble students with students marked as Shy as
+# much as possible.
 def no_t_with_s():
     global NUM_DESIRED_GROUPS
     global DESIRED_GROUP_SIZE
@@ -480,6 +626,8 @@ def no_t_with_s():
                     added = True
 
 
+# Algorithm to make groups that avoids placing students marked as Trouble students with other Trouble students as
+# well as students marked as Shy as much as possible.
 def no_t_with_t_or_s():
     global NUM_DESIRED_GROUPS
     global DESIRED_GROUP_SIZE
@@ -629,116 +777,7 @@ def no_t_with_t_or_s():
         return
 
 
-def no_t_with_t():
-    global NUM_DESIRED_GROUPS
-    global DESIRED_GROUP_SIZE
-    global RANDOMIZED_NON_SHY_STUDENTS
-    global RANDOMIZED_NON_TROUBLE_STUDENTS
-    global RANDOMIZED_CONSIDERED_STUDENTS
-    global TROUBLE_STUDENTS
-    if NUM_DESIRED_GROUPS != 0 and DESIRED_GROUP_SIZE == 0:
-        # HAS DESIRED # OF GROUPS
-        counter = 0
-        while counter < NUM_DESIRED_GROUPS:
-            counter = counter + 1
-            group = []
-            GROUPS.append(group)
-        # Do Ceiling Division of Total Number of students divded by number of trouble students to determine max number of trouble students that will be needed per group
-        if len(TROUBLE_STUDENTS) > NUM_DESIRED_GROUPS:
-            max_trouble_per_group = -(-int(len(ALL_CONSIDERED_STUDENTS)) // int(len(TROUBLE_STUDENTS)))
-        else:
-            max_trouble_per_group = 1
-        counter = 0
-        while counter < len(ALL_CONSIDERED_STUDENTS):
-            grp = GROUPS.pop(0)
-            trouble_in_group = 0
-            for kid in grp:
-                if kid.sociability == 0:
-                    trouble_in_group = trouble_in_group + 1
-            if trouble_in_group < max_trouble_per_group:
-                student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
-                grp.append(student)
-                counter = counter + 1
-                GROUPS.append(grp)
-            else:
-                GROUPS.append(grp)
-        # put this check for debugging in case i did something that causes not all the students
-        # from the randomized array to be put in a group
-        if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
-            print("ERROR CODE 1")
-    elif DESIRED_GROUP_SIZE != 0 and NUM_DESIRED_GROUPS == 0:
-        # HAS DESIRED GROUP SIZE
-        preliminary_groups = []
-        unaddable = []
-        while len(RANDOMIZED_CONSIDERED_STUDENTS) > MIN_GROUP_SIZE:
-            group = []
-            num_trouble_students = 0
-            grp_count = 0
-            while grp_count < MIN_GROUP_SIZE:
-                student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
-                if student.sociability == 0:
-                    if num_trouble_students == 0:
-                        group.append(student)
-                        grp_count = grp_count + 1
-                    else:
-                        unaddable.append(student)
-                else:
-                    group.append(student)
-                    grp_count = grp_count + 1
-            preliminary_groups.append(group)
-        if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
-            for group in preliminary_groups:
-                if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
-                    student = RANDOMIZED_CONSIDERED_STUDENTS.pop(0)
-                    if student.sociability == 0:
-                        already_trouble_in_group = False
-                        for kid in group:
-                            if kid.sociability == 0:
-                                already_trouble_in_group = True
-                        if already_trouble_in_group:
-                            unaddable.append(student)
-                        else:
-                            group.append(student)
-                    else:
-                        group.append(student)
-                else:
-                    break
-        if len(unaddable) > 0:
-            # array of arrays structured like [# of trouble students, # of students, pointer to position of array of students in the prelimary groups array]
-            trouble = []
-            counter = 0
-            for group in preliminary_groups:
-                trouble_count = 0
-                for kid in group:
-                    if kid.sociability == 0:
-                        trouble_count = trouble_count + 1
-                temp = []
-                temp.append(trouble_count)
-                temp.append(len(group))
-                temp.append(counter)
-                counter = counter + 1
-                trouble.append(temp)
-        while len(unaddable) > 0:
-            sorted(trouble)
-            group = trouble.pop(0)
-            if group[1] < MAX_GROUP_SIZE:
-                pointer = group[2]
-                students = preliminary_groups[pointer]
-                students.append(unaddable.pop(0))
-                preliminary_groups.pop(pointer)
-                GROUPS.append(students)
-            else:
-                GROUPS.append(group)
-        for group in preliminary_groups:
-            GROUPS.append(group)
-    else:
-        with open("/Users/wasecahodson/Desktop/classgroupings/ERRORS.txt", "w") as er:
-            er.write("ERROR: Please put NA in either the Number of Desired Groups or the Desired Group Size field - Cannot have "
-              "a value in both fields at the same time or no value in either field")
-        er.close()
-        return
-
-
+# Prints results to the RESULTS.txt file in a aesthetically pleasing arrangement based on how many groups were made.
 def read_to_file():
     file = []
     empty = ""
@@ -1438,6 +1477,7 @@ def read_to_file():
             f.write("\n")
 
 
+# Main function that calls all necessary functions to complete process.
 def run_program():
     global ALL_CONSIDERED_STUDENTS
     global TROUBLE_STUDENTS
