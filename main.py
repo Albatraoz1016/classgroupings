@@ -276,10 +276,6 @@ def no_t_with_t():
                 GROUPS.append(grp)
             else:
                 GROUPS.append(grp)
-        # put this check for debugging in case i did something that causes not all the students
-        # from the randomized array to be put in a group
-        if len(RANDOMIZED_CONSIDERED_STUDENTS) > 0:
-            print("ERROR CODE 1")
     elif DESIRED_GROUP_SIZE != 0 and NUM_DESIRED_GROUPS == 0:
         # HAS DESIRED GROUP SIZE
         preliminary_groups = []
@@ -1481,11 +1477,18 @@ def read_to_file():
 def run_program():
     global ALL_CONSIDERED_STUDENTS
     global TROUBLE_STUDENTS
+    global ERRORS
     read_in_teams()
+    if ERRORS:
+        return
     file = get_file_location()
     read_file(file)
+    if ERRORS:
+        return
     randomize()
     group_making_algorithm_chooser()
+    if ERRORS:
+        return
     read_to_file()
     result = "RESULTS.txt"
     subprocess.call(['open', '-a', 'TextEdit', result])
