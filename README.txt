@@ -10,41 +10,12 @@ To Run the Program from the Terminal:
         the program will automatically run - if no errors occurred the txt file with the resulting groups will
             automatically open for you. (it will be saved inside the classgroupings folder under RESULTS.txt)
         if there were errors (ones that i could predict might happen) I wrote a message describing what needs to be
-            adjusted in the rollcallx.txt file for the program to run accurately.
+            adjusted in the rollcallx.txt file for the program to run accurately - these errors are written out to
+            the ERRORS.txt file.
 
 //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
 
-I made the program capable of making a nice layout of groups for the range of 2 groups to 12 groups.
-Let me know if you need it done for a larger amount of groups.
-
-    The nice layout will be slightly messed up if you have a student with a name with more than 25 characters
-
-//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
-
-Can't Select both   "AVOID TROUBLE WITH TROUBLE" AND "AVOID TROUBLE WITH SHY" if the sum of both Trouble and Shy
-students is larger than the total amount of groups that are to be created.
-
-//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
-
-In the rollcall.txt file:
-You can choose to specify a number of desired groups or you can specify the group sizing you want. NOT BOTH.
-Whichever one you choose not to do PLEASE put NA as the value in the field(s)!
-NUMBER OF DESIRED GROUPS:	12
-
-GROUP SIZE:	NA
-MAX SIZE:	NA
-MIN SIZE:	NA
-
-//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
-
-In teams.txt you can specify the names used for the teams created. Don't have more than 12 lines in this file!
-(unless you ask me to make the program able to do more than 12 teams, then I will adjust this accordingly)
-
-//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
-
-The Gender column in the rollcallx.txt file is useless right now, you can adjust them if you want but it won't effect
-the program at all - just don't leave it blank please:)
-
-If you desire a gender based grouping algorithm to be added let me know.
+The nice layout report that displays the final groups in the RESULTS.txt file works best if the student names are kept
+below a length of 25 characters.
 
 //---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---//---
