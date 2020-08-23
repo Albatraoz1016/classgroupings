@@ -1,0 +1,65 @@
+# of Groups:	6	***
+OR		
+MIN size:	0	***
+OR		
+MAX size:	0	***
+		
+Avoid Trouble with Trouble?:	NO	*
+Avoid Shy with Trouble?	NO	*
+OR		
+Avg based on Socaibility Rating?	YES	**
+		
+*** Must have a value (put 0 in fields you're not specifying). Only have 1 field with a non 0 value		
+"** Please specify either ""YES"" or ""NO"" only. This field needs to be NO if one of the above ""AVOID?"" fields has a YES value."		
+"* Please specify either ""YES"" or ""NO"" only. These fields can both be YES at the same time. The field needs to be NO if you specify YES on the Avg option (below)"		
+		
+SOC RATING: 0 = TROUBLE 1 = SHY 2 = LESS SHY 3 = AVERAGE 4 = OUTGOING 5 = MOST OUTGOING		
+		
+"ABSENT (specify ""X"" if absent, blank if present)"	STUDENT NAME	SOCIABILITY RATING
+	Albus Dumbledore	0
+	Harry Potter	0
+	Tom Riddle AKA Voldemort	0
+	Hermione Granger	0
+	Ronald Weasley	1
+	Draco MALFOY	1
+	Minerva MCGONAGALL	3
+	Severus SNAPE	0
+X	Molly Weasley	1
+	Arthur Weasley	0
+	Fred Weasley	1
+X	George Weasley	5
+	Percy Weasley	2
+	Bill Weasley	5
+	Charlie Weasley	5
+	Ginny Weasley	2
+	Cho Chang	2
+	Vernon Dursley	2
+	Petunia Dursley	2
+	Dudley Dursley	2
+X	Lavender Brown	4
+	Cedric Diggory	4
+	Victor Krum	2
+X	Moaning Myrtle	2
+	Fleur Delacour	4
+	Dobby	5
+X	Kreacher	1
+X	Hedwig	2
+	Sirius Black	3
+	Remus Lupin	2
+	James Potter	4
+	Lilly Potter	4
+	Aberforth Dumbledore	2
+	Arianna Dumbledore	2
+	Kendra Dumbledore	2
+	Percival Dumbledore	3
+	CORNELIUS Fudge	4
+	Barty Crouch Jr.	2
+	Barty Crouch Sr.	4
+	Alastor Moody	3
+	Kingsley Shacklebolt	4
+	Nymphadora Tonks	4
+	Rubeus Hagrid	5
+	Gregory Goyle	0
+	Neville Longbottom	2
+	Vincent Crabbe	0
+	Garrick Ollivander	3

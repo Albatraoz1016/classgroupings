@@ -1,0 +1,13 @@
+This file is not used by the program at all. It is a place for you to add file pathnames to various files you
+create, so you don't have to go finding them every time. I put some examples - they're not associated with real
+files. There is no rule to how you document things here, and there are no rules on how you name the files that
+contain the roll list. so long as the filelocation.txt file has one correct path to the file you want to use in it,
+then it will work.
+
+
+
+Stats 1010 - 5th Hour - 2nd Tri - 2020:
+/Users/wasecahodson/Desktop/classgrouping/stats10105hr2tri2020rolllist.txt
+
+Math 1060 - 2nd Hour - 1st Tri - 2020:
+/Users/wasecahodson/Desktop/classgrouping/math10602hr1tri2020rolllist.txt

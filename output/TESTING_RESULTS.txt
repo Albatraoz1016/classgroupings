@@ -1,0 +1,19 @@
+--------------------------------------------------------------------
+
+Desired / Actual # Groups:     6 / 6
+Desired / Actual Max Size:     0 / 7
+Desired / Actual Min Size:     0 / 6
+
+Report Type:   Based on Social Scale
+
+Total # of Students:     41
+Number of Trouble Kids:  8
+Number of Shy Kids:      3
+
+# of Trouble Specific Groups:    0
+# of Shy Specific Groups:        0
+Max Trouble Per Group:           7
+Max Shy Per Group:               7
+
+--------------------------------------------------------------------
+
